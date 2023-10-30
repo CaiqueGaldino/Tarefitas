@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tarefas/HomePage.dart';
+import 'package:tarefas/NovaTask.dart';
 
 void main() async {
   // init hive

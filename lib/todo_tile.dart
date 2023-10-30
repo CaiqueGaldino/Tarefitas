@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:tarefas/constants.dart';
 
 class ToDoTile extends StatelessWidget {
   final String taskName;
@@ -51,10 +52,12 @@ class ToDoTile extends StatelessWidget {
                 Text(
                   taskName,
                   style: TextStyle(
+                    fontFamily: primaryFont,
                       fontSize: 16,
                       decoration: taskCompleted
                           ? TextDecoration.lineThrough
-                          : TextDecoration.none),
+                          : TextDecoration.none
+                          ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -62,6 +65,7 @@ class ToDoTile extends StatelessWidget {
                     Text(
                       start.toString(),
                       style: const TextStyle(
+                        fontFamily: primaryFont,
                         fontSize: 10,
                       ),
                     ),
@@ -69,6 +73,7 @@ class ToDoTile extends StatelessWidget {
                     Text(
                       end.toString(),
                       style: const TextStyle(
+                        fontFamily: primaryFont,
                         fontSize: 10,
                       ),
                     ),

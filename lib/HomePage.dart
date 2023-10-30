@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:tarefas/NovaTask.dart';
+import 'package:tarefas/constants.dart';
 import 'package:tarefas/database.dart';
 import 'package:tarefas/dialog_box.dart';
 import 'package:tarefas/todo_tile.dart';
@@ -33,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   }
 
 // text controller
-  final _controler = TextEditingController();
+  final _controller = TextEditingController();
 
   // ChackBox Changed
 
@@ -53,9 +55,9 @@ class _HomePageState extends State<HomePage> {
     DateTime _date = DateTime.now();
     var start = _date.day.toString() + "/" + _date.month.toString() + "/" + _date.year.toString();
     setState(() {
-      db.ToDoList.add([_controler.text, false,start, " "]);
+      db.ToDoList.add([_controller.text, false,start, " "]);
       
-      _controler.clear();
+      _controller.clear();
     });
     Navigator.of(context).pop();
     db.updateDatabase();
@@ -64,11 +66,13 @@ class _HomePageState extends State<HomePage> {
   // Create a new task
 
   void CreateNewTask() {
+
+    //Gambiarra com o dialog usado na versão anterior
     showDialog(
       context: context,
       builder: (context) {
-        return DialogBox(
-          controler: _controler,
+        return NovaTask(
+          controller: _controller,
           onSave: saveNewTask,
           onCancel: () => Navigator.of(context).pop(),
         );
@@ -89,7 +93,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         backgroundColor: Colors.amberAccent,
         appBar: AppBar(
-          title: const Text('T A R E F I T A S'),
+          title: const Text('T A R E F I T A S', style: TextStyle(fontFamily: primaryFont),),
           centerTitle: true,
           elevation: 5,
         ),
