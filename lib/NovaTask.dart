@@ -2,23 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:tarefas/constants.dart';
 
 class NovaTask extends StatelessWidget {
+  //final int bgColor;
   final controller;
-  VoidCallback onSave;
+  final void Function(int) onSave;
   VoidCallback onCancel;
 
+  var _cor = 0;
+
+  void alterarCor(int value){
+    _cor = value;
+  }
   NovaTask(
       {super.key,
+     // required this.bgColor,
       required this.controller,
       required this.onCancel,
       required this.onSave});
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: onSave,
-        child: Icon(Icons.save_rounded)),
-      
+          onPressed: (){
+            
+            onSave(_cor);
+          }, child: const Icon(Icons.save_rounded)),
       body: Stack(
         fit: StackFit.loose,
         alignment: Alignment.topCenter,
@@ -29,13 +38,13 @@ class NovaTask extends StatelessWidget {
             right: 0,
             child: Container(
               height: 300,
-              decoration: BoxDecoration(color: Colors.deepOrange),
+              decoration: const BoxDecoration(color: Colors.deepOrange),
               child: Padding(
                 padding: const EdgeInsets.only(top: 12, left: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     Container(
@@ -46,15 +55,19 @@ class NovaTask extends StatelessWidget {
                             color: Colors.white70),
                         child: IconButton(
                           onPressed: onCancel,
-                          icon: Icon(Icons.close_rounded),
+                          icon: const Icon(Icons.close_rounded),
                         )),
-                    SizedBox(
+                    const SizedBox(
                       height: 60,
                     ),
-                    Text(
+                    const Text(
                       "Criar nova task",
-                      style: TextStyle(color: Colors.white70, fontSize: 26, fontFamily: primaryFont),
+                      style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 26,
+                          fontFamily: primaryFont),
                     ),
+                    
                   ],
                 ),
               ),
@@ -67,7 +80,7 @@ class NovaTask extends StatelessWidget {
             bottom: 0,
             child: Container(
               height: double.infinity,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40),
                       topRight: Radius.circular(40)),
@@ -76,14 +89,34 @@ class NovaTask extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 24, right: 24, left: 24),
                 child: Column(
                   children: <Widget>[
-                    Text(
+                    const Text(
                       "Titulo",
-                      style: TextStyle(color: Colors.black, fontSize: 24, fontFamily: primaryFont),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontFamily: primaryFont),
                     ),
                     TextField(
                       controller: controller,
-                      decoration: InputDecoration(border: OutlineInputBorder(),hintText: "'Beber água'", hintStyle: TextStyle(fontFamily: primaryFont, color: Colors.black12)),
+                      decoration: const InputDecoration(
+                        
+                          border: OutlineInputBorder(),
+                          hintText: "'Nova Tarefa'",
+                          hintStyle: TextStyle(
+                              fontFamily: primaryFont, color: Colors.black12)),
                     ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        IconButton(onPressed: ()=>alterarCor(0), icon: Icon(Icons.circle), color: Colors.amber,iconSize: 40,splashRadius: 10),
+                        IconButton(onPressed: ()=>alterarCor(1), icon: Icon(Icons.circle), color: Colors.green,iconSize: 40,splashRadius: 10),
+                        IconButton(onPressed: ()=>alterarCor(2), icon: Icon(Icons.circle), color: Colors.blue,iconSize: 40,splashRadius: 10),
+                        IconButton(onPressed: ()=>alterarCor(3), icon: Icon(Icons.circle), color: Colors.red,iconSize: 40,splashRadius: 10),
+                      ],
+                    )
                   ],
                 ),
               ),

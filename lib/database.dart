@@ -7,19 +7,22 @@ class ToDoDatabase {
   // reference the box
   final _mybox = Hive.box('mybox');
 
+  
+
 // run this if is the first time ever opening the app
 void createInitialData(){
 ToDoList = [
-  ["Crie uma nova task", false,"05/03/1999", "-" ],
-  ["Deslise o card delete essa task", false,"05/03/1999","-"]
+  ["Crie uma nova task", false,"05/03/1999", "-", 0],
+  ["<= Deslise o card delete essa task", false,"05/03/1999","-", 3]
 ];
-
+ Completeds = [];
 
 }
 
 //load the data from the database
 void loadData(){
 ToDoList = _mybox.get("TODOLIST");
+Completeds = _mybox.get("COMPLETEDS");
 
 }
 
@@ -27,6 +30,8 @@ ToDoList = _mybox.get("TODOLIST");
 void updateDatabase(){
   
 _mybox.put("TODOLIST", ToDoList);
+_mybox.put("COMPLETEDS", Completeds);
+
 
 //Completeds = ToDoList.where((o) => o[1] == true).toList();
 }

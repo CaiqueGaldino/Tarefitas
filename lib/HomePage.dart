@@ -1,10 +1,14 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tarefas/NovaTask.dart';
+import 'package:tarefas/Todo_List.dart';
 import 'package:tarefas/constants.dart';
 import 'package:tarefas/database.dart';
 import 'package:tarefas/dialog_box.dart';
 import 'package:tarefas/todo_tile.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,11 +20,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 // reference the hive box
   final _mybox = Hive.box('mybox');
-  
 
   ToDoDatabase db = ToDoDatabase();
-
-  
 
   @override
   void initState() {
@@ -30,6 +31,8 @@ class _HomePageState extends State<HomePage> {
     } else {
       //já existe um banco
       db.loadData();
+      //List<dynamic> FilterList = [];
+      // FilterList = db.ToDoList;
     }
     super.initState();
   }
@@ -37,26 +40,40 @@ class _HomePageState extends State<HomePage> {
 // text controller
   final _controller = TextEditingController();
 
+  //final _bgColor = 3;
+
   // ChackBox Changed
 
   void checkBoxChanged(bool? value, int index) {
     DateTime _date = DateTime.now();
-    var end = _date.day.toString() + "/" + _date.month.toString() + "/" + _date.year.toString();
+    var end = DateFormat('d/M/yy').format(_date).toString();
+    
     setState(() {
-      db.ToDoList[index][1] = !db.ToDoList[index][1];
-      db.ToDoList[index][1] == true? db.ToDoList[index][3] = end : db.ToDoList[index][3] = " ";
-      
+      if (value == true) {
+        db.ToDoList[index][1] = !db.ToDoList[index][1];
+        db.ToDoList[index][3] = end;
+        db.Completeds.add(db.ToDoList[index]);
+        db.ToDoList.removeAt(index);
+      } else {
+        db.Completeds[index][1] = !db.Completeds[index][1];
+        db.Completeds[index][3] = "";
+        db.ToDoList.add(db.Completeds[index]);
+        db.Completeds.removeAt(index);
+      }
+
+      //db.ToDoList[index][1] == true? db.ToDoList[index][3] = end : db.ToDoList[index][3] = " ";
     });
     db.updateDatabase();
   }
 
 // save a new task
-  void saveNewTask() {
+  void saveNewTask(int cor) {
     DateTime _date = DateTime.now();
-    var start = _date.day.toString() + "/" + _date.month.toString() + "/" + _date.year.toString();
+    var start = DateFormat('d/M/yy').format(_date).toString();
+    int c = cor;
     setState(() {
-      db.ToDoList.add([_controller.text, false,start, " "]);
-      
+      db.ToDoList.add([_controller.text, false, start, " ", c]);
+
       _controller.clear();
     });
     Navigator.of(context).pop();
@@ -66,7 +83,6 @@ class _HomePageState extends State<HomePage> {
   // Create a new task
 
   void CreateNewTask() {
-
     //Gambiarra com o dialog usado na versão anterior
     showDialog(
       context: context,
@@ -75,6 +91,7 @@ class _HomePageState extends State<HomePage> {
           controller: _controller,
           onSave: saveNewTask,
           onCancel: () => Navigator.of(context).pop(),
+          //bgColor: _bgColor,
         );
       },
     );
@@ -82,10 +99,33 @@ class _HomePageState extends State<HomePage> {
 
   //delete task
   void deleteTask(int index) {
-    setState(() {
+    if(filter){
+      setState(() {
       db.ToDoList.removeAt(index);
     });
+    } else{
+      setState(() {
+      db.Completeds.removeAt(index);
+    });
+    }
+    
     db.updateDatabase();
+  }
+
+  
+  var filter = true;
+  void FilterToDo() {
+    setState(() {
+      filter = true;
+      
+    });
+  }
+
+  void FilterCompleteds() {
+    setState(() {
+      filter = false;
+    
+    });
   }
 
   @override
@@ -93,42 +133,62 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         backgroundColor: Colors.amberAccent,
         appBar: AppBar(
-          title: const Text('T A R E F I T A S', style: TextStyle(fontFamily: primaryFont),),
+          title: const Text(
+            'T A R E F I T A S',
+            style: TextStyle(fontFamily: primaryFont),
+          ),
           centerTitle: true,
           elevation: 5,
         ),
         floatingActionButton: FloatingActionButton(
-            onPressed: CreateNewTask,
-            child: const Icon(Icons.add)),
+            onPressed: CreateNewTask, child: const Icon(Icons.add)),
         body: Column(
-
           children: [
             Expanded(
               flex: 1,
-              child: const Padding(
-                padding: EdgeInsets.only(top: 20, right: 12, left: 12, bottom: 12),
-                child: TextField(
-                  decoration: InputDecoration(border: OutlineInputBorder(), hintText: "Pesquisar"),
-                ),
-              ),
+              child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 20, right: 12, left: 12, bottom: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Container(
+                          width: 100,
+                          decoration: BoxDecoration(
+                              color: filter ? Colors.grey : Colors.amber,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                  color:
+                                      filter ? Colors.black54 : Colors.amber)),
+                          child: TextButton(
+                              onPressed: FilterToDo,
+                              child: Text(
+                                "A fazer",
+                                style: TextStyle(color: Colors.black),
+                              ))),
+                      Container(
+                          width: 100,
+                          decoration: BoxDecoration(
+                              color: filter ? Colors.amber : Colors.grey,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                  color:
+                                      filter ? Colors.amber : Colors.black54)),
+                          child: TextButton(
+                              onPressed: FilterCompleteds,
+                              child: Text(
+                                "Completas",
+                                style: TextStyle(color: Colors.black),
+                              ))),
+                    ],
+                  )),
             ),
             Expanded(
-              flex: 7,
-              child: ListView.builder(
-                shrinkWrap: true,
-                  itemCount: db.ToDoList.length,
-                  itemBuilder: (context, index) {
-                    
-                    return ToDoTile(
-                      taskName: db.ToDoList[index][0],
-                      taskCompleted: db.ToDoList[index][1],
-                      start: db.ToDoList[index][2].toString(),
-                      end: db.ToDoList[index][3].toString(),
-                      onChanged: (value) => checkBoxChanged(value, index),
-                      deleFunction: (context) => deleteTask(index),
-                    );
-                  }),
-            ),
+                flex: 7,
+                child: TodoList(
+                    FilterList: filter ? db.ToDoList : db.Completeds,
+                    checkBoxChanged: checkBoxChanged,
+                    deleteTask: deleteTask)),
           ],
         ));
   }
