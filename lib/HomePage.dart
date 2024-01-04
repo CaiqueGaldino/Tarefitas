@@ -1,13 +1,11 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tarefas/NovaTask.dart';
+import 'package:tarefas/Todo_Categories.dart';
 import 'package:tarefas/Todo_List.dart';
 import 'package:tarefas/constants.dart';
 import 'package:tarefas/database.dart';
-import 'package:tarefas/dialog_box.dart';
-import 'package:tarefas/todo_tile.dart';
+
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
@@ -131,7 +129,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.amberAccent,
+       backgroundColor: Paleta[0],
         appBar: AppBar(
           title: const Text(
             'T A R E F I T A S',
@@ -141,10 +139,24 @@ class _HomePageState extends State<HomePage> {
           elevation: 5,
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Paleta[4],
             onPressed: CreateNewTask, child: const Icon(Icons.add)),
         body: Column(
           children: [
-            Expanded(
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                
+                children: <Widget>[
+                  TodoCategories(bgcolor: 0,title: "Pessoal",icone: 0,),
+                  TodoCategories(bgcolor: 1,title: "Trabalho",icone: 1,),
+                  TodoCategories(bgcolor: 2,title: "Saúde",icone: 2,),
+                  TodoCategories(bgcolor: 3,title: "Estudos",icone: 3,),
+                  TodoCategories(bgcolor: 4,title: "Variados",icone: 4,),
+                ],
+              ),
+            ),
+           /* Expanded(
               flex: 1,
               child: Padding(
                   padding: const EdgeInsets.only(
@@ -182,7 +194,8 @@ class _HomePageState extends State<HomePage> {
                               ))),
                     ],
                   )),
-            ),
+            ),*/
+            
             Expanded(
                 flex: 7,
                 child: TodoList(

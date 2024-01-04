@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tarefas/HomePage.dart';
-import 'package:tarefas/NovaTask.dart';
+import 'package:tarefas/constants.dart';
 
 void main() async {
   // init hive
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.amber),
+      theme: ThemeData(colorSchemeSeed: Paleta[3]),
       home: const HomePage(),
     );
   }

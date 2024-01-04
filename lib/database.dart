@@ -4,6 +4,7 @@ class ToDoDatabase {
 
   List ToDoList = [];
   List Completeds = [];
+  //List Categories = [];
   // reference the box
   final _mybox = Hive.box('mybox');
 
@@ -13,9 +14,14 @@ class ToDoDatabase {
 void createInitialData(){
 ToDoList = [
   ["Crie uma nova task", false,"05/03/1999", "-", 0],
-  ["<= Deslise o card delete essa task", false,"05/03/1999","-", 3]
+  ["<= Deslise o card ", false,"05/03/1999","-", 3]
 ];
  Completeds = [];
+ /*Categories = [
+  ["Pessoal", 1, 0],
+  ["Profissional", 2, 0],
+
+ ];*/
 
 }
 
@@ -23,6 +29,7 @@ ToDoList = [
 void loadData(){
 ToDoList = _mybox.get("TODOLIST");
 Completeds = _mybox.get("COMPLETEDS");
+//Categories = _mybox.get("CATEGORIES");
 
 }
 
@@ -31,6 +38,7 @@ void updateDatabase(){
   
 _mybox.put("TODOLIST", ToDoList);
 _mybox.put("COMPLETEDS", Completeds);
+//_mybox.put("COMPLETEDS", Categories);
 
 
 //Completeds = ToDoList.where((o) => o[1] == true).toList();

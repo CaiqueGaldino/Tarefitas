@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tarefas/constants.dart';
 
 class ToDoTile extends StatelessWidget {
@@ -10,6 +11,7 @@ class ToDoTile extends StatelessWidget {
   final int bgColor;
   Function(bool?)? onChanged;
   Function(BuildContext)? deleFunction;
+  final String? note;
 
   ToDoTile(
       {super.key,
@@ -19,7 +21,7 @@ class ToDoTile extends StatelessWidget {
       this.end,
       required this.bgColor,
       required this.onChanged,
-      required this.deleFunction});
+      required this.deleFunction, this.note});
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +39,19 @@ class ToDoTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-              color:ColorsList[bgColor], borderRadius: BorderRadius.circular(12)),
-          child: Row(children: [
+              color:Paleta[1], borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: Offset(0, 3)
+                )
+              ],),
+              
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
             Checkbox(
               
               splashRadius: Checkbox.width,
@@ -79,10 +92,20 @@ class ToDoTile extends StatelessWidget {
                         fontSize: 10,
                       ),
                     ),
+                    
                   ],
                 ),
               ],
             ),
+            Container(
+              decoration: BoxDecoration(
+                color: ColorsList[bgColor],
+                shape: BoxShape.circle
+              ),
+              alignment: Alignment.centerRight,
+              height: 30,
+              width: 30,
+            )
           ]),
         ),
       ),

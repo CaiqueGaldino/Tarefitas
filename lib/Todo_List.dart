@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tarefas/database.dart';
 import 'todo_tile.dart';
 
 class TodoList extends StatelessWidget {
